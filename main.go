@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/waku-org/waku-go-bindings/waku"
+	"github.com/waku-org/waku-go-bindings/waku/common"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +21,7 @@ func main() {
 
 	const requestTimeout = 30 * time.Second
 	// Configure dialer node
-	dialerNodeWakuConfig := waku.WakuConfig{
+	dialerNodeWakuConfig := common.WakuConfig{
 		Relay:           true,
 		LogLevel:        "DEBUG",
 		Discv5Discovery: false,
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	// Create and start dialer node
-	dialerNode, err := waku.NewWakuNode(&dialerNodeWakuConfig, logger.Named("dialerNode"))
+	dialerNode, err := waku.NewWakuNode(&dialerNodeWakuConfig, "dialerNode")
 	if err != nil {
 		fmt.Printf("Failed to create dialer node: %v\n", err)
 		return
@@ -44,7 +45,7 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	// Configure receiver node
-	receiverNodeWakuConfig := waku.WakuConfig{
+	receiverNodeWakuConfig := common.WakuConfig{
 		Relay:           true,
 		LogLevel:        "DEBUG",
 		Discv5Discovery: false,
@@ -55,7 +56,7 @@ func main() {
 	}
 
 	// Create and start receiver node
-	receiverNode, err := waku.NewWakuNode(&receiverNodeWakuConfig, logger.Named("receiverNode"))
+	receiverNode, err := waku.NewWakuNode(&receiverNodeWakuConfig, "receiverNode")
 	if err != nil {
 		fmt.Printf("Failed to create receiver node: %v\n", err)
 		return
