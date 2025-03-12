@@ -7,7 +7,7 @@ Sample integration of [waku-go-bindings](https://github.com/waku-org/waku-go-bin
 1. Build the `libwaku` dependency:
 
 ```
-sudo make buildlib
+make buildlib
 ```
 
 2. Build the example project:
