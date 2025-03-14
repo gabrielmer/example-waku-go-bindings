@@ -5,6 +5,7 @@ CGO_LDFLAGS="-L$(LIBWAKU_PATH) -Wl,-rpath -Wl,$(LIBWAKU_PATH)"
 CGO_CFLAGS="-I$(LIBWAKU_PATH)"
 BIN=example
 
+all: run
 
 buildlib:
 	cd $(LIBWAKU_DEP_PATH) && \
