@@ -5,10 +5,16 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/waku-org/go-waku/waku/v2/protocol/pb"
 	"github.com/waku-org/waku-go-bindings/waku"
 	"github.com/waku-org/waku-go-bindings/waku/common"
 	"go.uber.org/zap"
 )
+
+const AppName = "example"
+const AppVersion = "1"
+
+var ContentTopic = fmt.Sprintf("/%s/%s/foo/plain", AppName, AppVersion)
 
 func main() {
 	// Create logger
@@ -113,4 +119,25 @@ func main() {
 		return
 	}
 	fmt.Printf("Receiver final peer count: %d\n", receiverPeerCount)
+
+	go func() {
+		for envelope := range receiverNode.MsgChan {
+			if envelope.Message().ContentTopic == ContentTopic {
+				fmt.Printf("Received message: %s\n", string(envelope.Message().Payload))
+			}
+		}
+	}()
+
+	for i := 0; i < 10; i++ {
+		payload := fmt.Sprintf("Message %d", i)
+		ctx := context.Background()
+		msg := &pb.WakuMessage{
+			Payload:      []byte(payload),
+			ContentTopic: ContentTopic,
+		}
+		dialerNode.RelayPublish(ctx, msg, "/waku/2/rs/16/64")
+		time.Sleep(1 * time.Second)
+	}
+
+	time.Sleep(3 * time.Second)
 }
